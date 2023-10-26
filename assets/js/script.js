@@ -1,6 +1,7 @@
 const introDiv = document.getElementById("intro");
 const startButton = document.getElementById("start");
 const questionSection = document.getElementById("questions");
+const choiceSection = document.getElementById("choices");
 const responseSection = document.getElementById("response");
 
 const questions = [
@@ -47,26 +48,73 @@ const questions = [
 ]
 
 startButton.addEventListener("click", startQuiz);
-questionSection.addEventListener("click", evaluateAnswer);
+choiceSection.addEventListener("click", evaluateAnswer);
 
-function startQuiz(){
-    for(let i = 0; i < questions.length; i++) {
-        //create elements
-        //1 h2
-        //4 buttons
-        //buttons have class = answers
-        //add event listener to questionSection
-        //if (event.target.matches(.answers){})
-console.log(questions[i].question);
-console.log(questions[i].a);
-console.log(questions[i].b);
-console.log(questions[i].c);
-console.log(questions[i].d);
+let questionIndex = 0;
+
+function startQuiz() {
+    if(questionIndex >= questions.length) {
+        endQuiz();
+    } else {
+    introDiv.classList.add("hide");
+    startButton.classList.add("hide");
+    const question = document.createElement("h2");
+    const choiceList = document.createElement("ul");
+    const choiceA = document.createElement("button");
+    const choiceB = document.createElement("button");
+    const choiceC = document.createElement("button");
+    const choiceD = document.createElement("button");
+    question.textContent = questions[questionIndex].question;
+    choiceA.textContent = questions[questionIndex].a;
+    choiceB.textContent = questions[questionIndex].b;
+    choiceC.textContent = questions[questionIndex].c;
+    choiceD.textContent = questions[questionIndex].d;
+    questionSection.appendChild(question);
+    choiceSection.appendChild(choiceList);
+    choiceList.appendChild(choiceA);
+    choiceList.appendChild(choiceB);
+    choiceList.appendChild(choiceC);
+    choiceList.appendChild(choiceD);
+}}
+
+const nextQuestionBtn = document.createElement("button");
+nextQuestionBtn.addEventListener("click", nextQuestion);
+
+function evaluateAnswer(event) {
+    const answer = event.target;
+    if (answer.matches("button")) {
+        if (answer.textContent == questions[questionIndex].answer) {
+            questionSection.classList.add("hide");
+            choiceSection.classList.add("hide");
+            const correctAnswer = document.createElement("h3");
+            correctAnswer.textContent = "That's Correct!";
+            responseSection.appendChild(correctAnswer);
+            console.log("thats correct!")
+        } else {
+            questionSection.classList.add("hide");
+            choiceSection.classList.add("hide");
+            const incorrectAnswer = document.createElement("h3");
+            incorrectAnswer.textContent = "That's Incorrect!";
+            responseSection.appendChild(incorrectAnswer);
+            console.log("that's not correct")
+        }
+        nextQuestionBtn.textContent = "Next Question";
+        responseSection.appendChild(nextQuestionBtn);
+    } else {
+        return;
     }
 }
 
-function evaluateAnswer(event){
-    const answer = event.target;
-    console.log(answer)
-    // if(answer.value.matches()) its sibling...find a way to target the answer sibling
+function nextQuestion() {
+    questionIndex++;
+    questionSection.classList.remove("hide");
+    choiceSection.classList.remove("hide");
+    responseSection.textContent = "";
+    questionSection.textContent = "";
+    choiceSection.textContent = "";
+    startQuiz();
 }
+
+function endQuiz() {
+    console.log("quiz ending");
+};
