@@ -3,6 +3,7 @@ const startButton = document.getElementById("start");
 const questionSection = document.getElementById("questions");
 const choiceSection = document.getElementById("choices");
 const responseSection = document.getElementById("response");
+const timerSection = document.getElementById("timer");
 
 const questions = [
     {
@@ -51,8 +52,13 @@ startButton.addEventListener("click", startQuiz);
 choiceSection.addEventListener("click", evaluateAnswer);
 
 let questionIndex = 0;
+let timerOn = false;
 
 function startQuiz() {
+    if(!timerOn){
+        setTime()
+    }
+    timerOn = true;
     if(questionIndex >= questions.length) {
         endQuiz();
     } else {
@@ -117,4 +123,25 @@ function nextQuestion() {
 
 function endQuiz() {
     console.log("quiz ending");
+    responseSection.textContent = "";
+    questionSection.textContent = "";
+    choiceSection.textContent = "";
+    timerSection.textContent = "";
 };
+
+
+//Timer Section
+let timeLeft = 60;
+
+function setTime() {
+    const timerInterval = setInterval(function () {
+        timeLeft--;
+        timerSection.textContent = timeLeft;
+
+        if (timeLeft === 0) {
+            clearInterval(timerInterval);
+            endQuiz();
+        }
+
+    }, 1000);
+}
