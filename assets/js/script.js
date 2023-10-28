@@ -4,6 +4,8 @@ const questionSection = document.getElementById("questions");
 const choiceSection = document.getElementById("choices");
 const responseSection = document.getElementById("response");
 const timerSection = document.getElementById("timer");
+const scoreSection = document.getElementById("score");
+const highScoreSection = document.getElementById("highscores");
 
 const questions = [
     {
@@ -48,6 +50,17 @@ const questions = [
     },
 ]
 
+highScoreSection.classList.add("hide");
+
+function renderHighScores() {
+    const scoreBoard = JSON.parse(localStorage.getItem("scores")) || "";
+    console.log(scoreBoard);
+    highScoreSection.classList.remove("hide");
+    const scoreBoardHeader = document.createElement("h2");
+    scoreBoardHeader.textContent = "HighScores:";
+    highScoreSection.appendChild(scoreBoardHeader);
+}
+
 startButton.addEventListener("click", startQuiz);
 choiceSection.addEventListener("click", evaluateAnswer);
 
@@ -58,10 +71,10 @@ function startQuiz() {
     if(!timerOn){
         setTime()
     }
-    timerOn = true;
-    if(questionIndex >= questions.length) {
-        endQuiz();
+    if (timeLeft === 0 || questionIndex >= questions.length) {
+        clearInterval(timerInterval);
     } else {
+    timerOn = true;
     introDiv.classList.add("hide");
     startButton.classList.add("hide");
     const question = document.createElement("h2");
@@ -90,18 +103,22 @@ function evaluateAnswer(event) {
     const answer = event.target;
     if (answer.matches("button")) {
         if (answer.textContent == questions[questionIndex].answer) {
+            clearInterval(timerInterval);
             questionSection.classList.add("hide");
             choiceSection.classList.add("hide");
             const correctAnswer = document.createElement("h3");
             correctAnswer.textContent = "That's Correct!";
             responseSection.appendChild(correctAnswer);
             console.log("thats correct!")
+
         } else {
+            clearInterval(timerInterval);
             questionSection.classList.add("hide");
             choiceSection.classList.add("hide");
             const incorrectAnswer = document.createElement("h3");
             incorrectAnswer.textContent = "That's Incorrect!";
             responseSection.appendChild(incorrectAnswer);
+            timeLeft = timeLeft - 10;
             console.log("that's not correct")
         }
         nextQuestionBtn.textContent = "Next Question";
@@ -119,6 +136,7 @@ function nextQuestion() {
     questionSection.textContent = "";
     choiceSection.textContent = "";
     startQuiz();
+    setTime();
 }
 
 function endQuiz() {
@@ -127,14 +145,48 @@ function endQuiz() {
     questionSection.textContent = "";
     choiceSection.textContent = "";
     timerSection.textContent = "";
+    setScore();
 };
+
+const highScoreArr = [];
+
+function setScore(){
+    const scoreForm = document.createElement("form");
+    const scoreHeader = document.createElement("h3");
+    scoreHeader.textContent = "Your Score: " + timeLeft;
+    const initialLabel = document.createElement("label");
+    initialLabel.setAttribute("for", "initials");
+    initialLabel.textContent = "Enter Initials:"
+    const initialInput = document.createElement("input");
+    initialInput.setAttribute("type", "text")
+    initialInput.setAttribute("id", "initials")
+    const initialSubmit = document.createElement("input");
+    initialSubmit.setAttribute("type", "submit");
+    initialSubmit.setAttribute("value", "Submit");
+    initialSubmit.addEventListener("click", function(event) {
+        event.preventDefault();
+        const userID = initialInput.value
+        const userScore = timeLeft;
+        const userData = userID + ": " + userScore;
+        highScoreArr.push(userData);
+        localStorage.setItem("scores", JSON.stringify(highScoreArr));
+        renderHighScores();
+        scoreSection.classList.add("hide");
+    });
+    scoreForm.appendChild(scoreHeader);
+    scoreForm.appendChild(initialLabel);
+    scoreForm.appendChild(initialInput);
+    scoreForm.appendChild(initialSubmit);
+    scoreSection.appendChild(scoreForm);
+}
 
 
 //Timer Section
+let timerInterval;
 let timeLeft = 60;
 
 function setTime() {
-    const timerInterval = setInterval(function () {
+    timerInterval = setInterval(function () {
         timeLeft--;
         timerSection.textContent = timeLeft;
 
