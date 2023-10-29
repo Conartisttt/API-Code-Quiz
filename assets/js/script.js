@@ -7,7 +7,18 @@ const timerSection = document.getElementById("timer");
 const timeLeftSpan = document.getElementById("timeleft");
 const scoreSection = document.getElementById("score");
 const highScoreSection = document.getElementById("highscores");
+const nextQuestionBtn = document.createElement("button");
 
+//Event Listeners for Buttons
+nextQuestionBtn.addEventListener("click", nextQuestion);
+startButton.addEventListener("click", startQuiz);
+choiceSection.addEventListener("click", evaluateAnswer);
+
+//Variable to identify which question to display to user, and to initialize that timer has not started
+let questionIndex = 0;
+let timerOn = false;
+
+//Questions for Quiz
 const questions = [
     {
         "question": "Which is not a data type in JavaScript?",
@@ -51,30 +62,24 @@ const questions = [
     },
 ]
 
-highScoreSection.classList.add("hide");
+//Timer Section
+let timerInterval;
+let timeLeft = 60;
 
-function renderHighScores() {
-    const scoreBoard = JSON.parse(localStorage.getItem("scores")) || "";
-    console.log(scoreBoard);
-    highScoreSection.classList.remove("hide");
-    const scoreBoardHeader = document.createElement("h2");
-    scoreBoardHeader.textContent = "HighScores:";
-    highScoreSection.appendChild(scoreBoardHeader);
-    const indivScoreList = document.createElement("ul");
-    scoreBoardHeader.appendChild(indivScoreList);
-    for (let i = 0; i < scoreBoard.length; i++) {
-        const indivScore = document.createElement("li");
-        indivScore.textContent = scoreBoard[i];
-        indivScoreList.appendChild(indivScore);
-    }
+function setTime() {
+    timerInterval = setInterval(function () {
+        timeLeft--;
+        timeLeftSpan.textContent = timeLeft;
+
+        if (timeLeft === 0 || questionIndex >= questions.length) {
+            clearInterval(timerInterval);
+            endQuiz();
+        }
+
+    }, 1000);
 }
 
-startButton.addEventListener("click", startQuiz);
-choiceSection.addEventListener("click", evaluateAnswer);
-
-let questionIndex = 0;
-let timerOn = false;
-
+//Function called to display each question on page
 function startQuiz() {
     if (!timerOn) {
         setTime()
@@ -106,9 +111,7 @@ function startQuiz() {
     }
 }
 
-const nextQuestionBtn = document.createElement("button");
-nextQuestionBtn.addEventListener("click", nextQuestion);
-
+//Function called when user clicks a multiple choice answer to evaluate it
 function evaluateAnswer(event) {
     const answer = event.target;
     if (answer.matches("button")) {
@@ -138,6 +141,7 @@ function evaluateAnswer(event) {
     }
 }
 
+//Function called when next question button is hit to hide elements, call startQuiz to display next question, and call setTime to update timer
 function nextQuestion() {
     questionIndex++;
     questionSection.classList.remove("hide");
@@ -149,6 +153,7 @@ function nextQuestion() {
     setTime();
 }
 
+//Function called when timer reaches 0 or all questions are answered, calls setScore function
 function endQuiz() {
     console.log("quiz ending");
     responseSection.textContent = "";
@@ -158,8 +163,7 @@ function endQuiz() {
     setScore();
 };
 
-
-
+//Function called at end of quiz to enter user initals and log score to local storage
 function setScore() {
     const highScoreArr = JSON.parse(localStorage.getItem("scores")) || "";
     const scoreForm = document.createElement("form");
@@ -195,20 +199,20 @@ function setScore() {
     scoreSection.appendChild(scoreForm);
 }
 
-
-//Timer Section
-let timerInterval;
-let timeLeft = 60;
-
-function setTime() {
-    timerInterval = setInterval(function () {
-        timeLeft--;
-        timeLeftSpan.textContent = timeLeft;
-
-        if (timeLeft === 0 || questionIndex >= questions.length) {
-            clearInterval(timerInterval);
-            endQuiz();
-        }
-
-    }, 1000);
+//Renders the scores stored in local storage to the page
+function renderHighScores() {
+    const scoreBoard = JSON.parse(localStorage.getItem("scores")) || "";
+    console.log(scoreBoard);
+    highScoreSection.classList.remove("hide");
+    const scoreBoardHeader = document.createElement("h2");
+    scoreBoardHeader.textContent = "HighScores:";
+    highScoreSection.appendChild(scoreBoardHeader);
+    const indivScoreList = document.createElement("ul");
+    scoreBoardHeader.appendChild(indivScoreList);
+    for (let i = 0; i < scoreBoard.length; i++) {
+        const indivScore = document.createElement("li");
+        indivScore.textContent = scoreBoard[i];
+        indivScoreList.appendChild(indivScore);
+    }
 }
+
