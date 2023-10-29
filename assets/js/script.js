@@ -4,6 +4,7 @@ const questionSection = document.getElementById("questions");
 const choiceSection = document.getElementById("choices");
 const responseSection = document.getElementById("response");
 const timerSection = document.getElementById("timer");
+const timeLeftSpan = document.getElementById("timeleft");
 const scoreSection = document.getElementById("score");
 const highScoreSection = document.getElementById("highscores");
 
@@ -59,6 +60,13 @@ function renderHighScores() {
     const scoreBoardHeader = document.createElement("h2");
     scoreBoardHeader.textContent = "HighScores:";
     highScoreSection.appendChild(scoreBoardHeader);
+    const indivScoreList = document.createElement("ul");
+    scoreBoardHeader.appendChild(indivScoreList);
+    for (let i = 0; i < scoreBoard.length; i++) {
+        const indivScore = document.createElement("li");
+        indivScore.textContent = scoreBoard[i];
+        indivScoreList.appendChild(indivScore);
+    }
 }
 
 startButton.addEventListener("click", startQuiz);
@@ -68,33 +76,35 @@ let questionIndex = 0;
 let timerOn = false;
 
 function startQuiz() {
-    if(!timerOn){
+    if (!timerOn) {
         setTime()
+        timerSection.classList.remove("hide");
     }
     if (timeLeft === 0 || questionIndex >= questions.length) {
         clearInterval(timerInterval);
     } else {
-    timerOn = true;
-    introDiv.classList.add("hide");
-    startButton.classList.add("hide");
-    const question = document.createElement("h2");
-    const choiceList = document.createElement("ul");
-    const choiceA = document.createElement("button");
-    const choiceB = document.createElement("button");
-    const choiceC = document.createElement("button");
-    const choiceD = document.createElement("button");
-    question.textContent = questions[questionIndex].question;
-    choiceA.textContent = questions[questionIndex].a;
-    choiceB.textContent = questions[questionIndex].b;
-    choiceC.textContent = questions[questionIndex].c;
-    choiceD.textContent = questions[questionIndex].d;
-    questionSection.appendChild(question);
-    choiceSection.appendChild(choiceList);
-    choiceList.appendChild(choiceA);
-    choiceList.appendChild(choiceB);
-    choiceList.appendChild(choiceC);
-    choiceList.appendChild(choiceD);
-}}
+        timerOn = true;
+        introDiv.classList.add("hide");
+        startButton.classList.add("hide");
+        const question = document.createElement("h2");
+        const choiceList = document.createElement("ul");
+        const choiceA = document.createElement("button");
+        const choiceB = document.createElement("button");
+        const choiceC = document.createElement("button");
+        const choiceD = document.createElement("button");
+        question.textContent = questions[questionIndex].question;
+        choiceA.textContent = questions[questionIndex].a;
+        choiceB.textContent = questions[questionIndex].b;
+        choiceC.textContent = questions[questionIndex].c;
+        choiceD.textContent = questions[questionIndex].d;
+        questionSection.appendChild(question);
+        choiceSection.appendChild(choiceList);
+        choiceList.appendChild(choiceA);
+        choiceList.appendChild(choiceB);
+        choiceList.appendChild(choiceC);
+        choiceList.appendChild(choiceD);
+    }
+}
 
 const nextQuestionBtn = document.createElement("button");
 nextQuestionBtn.addEventListener("click", nextQuestion);
@@ -148,9 +158,10 @@ function endQuiz() {
     setScore();
 };
 
-const highScoreArr = [];
 
-function setScore(){
+
+function setScore() {
+    const highScoreArr = JSON.parse(localStorage.getItem("scores")) || "";
     const scoreForm = document.createElement("form");
     const scoreHeader = document.createElement("h3");
     scoreHeader.textContent = "Your Score: " + timeLeft;
@@ -163,12 +174,16 @@ function setScore(){
     const initialSubmit = document.createElement("input");
     initialSubmit.setAttribute("type", "submit");
     initialSubmit.setAttribute("value", "Submit");
-    initialSubmit.addEventListener("click", function(event) {
+    initialSubmit.addEventListener("click", function (event) {
         event.preventDefault();
         const userID = initialInput.value
         const userScore = timeLeft;
         const userData = userID + ": " + userScore;
-        highScoreArr.push(userData);
+        if(!userID) {
+            alert("You must enter initials");
+            return;
+        }
+        highScoreArr.unshift(userData);
         localStorage.setItem("scores", JSON.stringify(highScoreArr));
         renderHighScores();
         scoreSection.classList.add("hide");
@@ -188,7 +203,7 @@ let timeLeft = 60;
 function setTime() {
     timerInterval = setInterval(function () {
         timeLeft--;
-        timerSection.textContent = timeLeft;
+        timeLeftSpan.textContent = timeLeft;
 
         if (timeLeft === 0 || questionIndex >= questions.length) {
             clearInterval(timerInterval);
