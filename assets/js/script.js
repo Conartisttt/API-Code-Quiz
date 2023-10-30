@@ -169,7 +169,7 @@ function endQuiz() {
 
 //Function called at end of quiz to enter user initals and log score to local storage
 function setScore() {
-    const highScoreArr = JSON.parse(localStorage.getItem("scores")) || "";
+    const highScoreArr = JSON.parse(localStorage.getItem("scores")) || [];
     const scoreForm = document.createElement("form");
     const scoreHeader = document.createElement("h3");
     scoreHeader.textContent = "Your Score: " + timeLeft;
