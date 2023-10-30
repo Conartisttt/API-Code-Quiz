@@ -4,6 +4,8 @@
 
 The purpose of the application is to allow users to take a timed coding quiz with multiple-choice questions. You will have 60 seconds to complete the quiz. For each question answered incorrectly, 10 seconds will be deducted from the timer. It runs in the browser, and scores will be saved at the end of the quiz so that the user can track their progress over time.
 
+My deployed application can be found [here](https://conartisttt.github.io/API-Code-Quiz/)
+
 ## Features
 
 * Dynamically updated HTML & CSS, powered by JavaScript
@@ -12,7 +14,11 @@ The purpose of the application is to allow users to take a timed coding quiz wit
 
 The following animation demonstrates the application functionality:
 
-![A user clicks through an interactive coding quiz, then enters initials to save the high score before resetting and starting over.](./assets/images/04-web-apis-homework-demo.gif)
+![Welcome Page](./assets/images/welcome.png)
+![Display Question](./assets/images/question.png)
+![Correct Answer](./assets/images/correct.png)
+![Incorrect Answer](./assets/images/incorrect.png)
+![Submit Score](./assets/images/submitscore.png)
 
 
 ## Technologies Used
@@ -25,35 +31,3 @@ The following animation demonstrates the application functionality:
 ## Credits
 
 * All code written by Conner Martin aka Conartisttt
-
-
-
-
-TODOS:
-
-<!-- DONE -->
-- Start button starts a timer and presents a question
-
-<!-- DONE -->
-- When question is answered, another question appears
-
-<!-- DONE -->
-- When I answer incorrectly, time is deducted from the clock
-
-<!-- DONE -->
-- When all questions are answered or the timer reaches 0, the quiz ends
-
-<!-- DONE -->
-- When quiz ends, you can save your initials and your score
-
-
-- Style
-- Make Mobile Friendly
-- Deploy at live URL
-- Add quality comments
-- Add screenshot to readme
-- Add link to deployment in readme
-
-BONUS:
-- add clear highscores button?
-- sort high scores?
