@@ -1,3 +1,60 @@
+body {
+    background-color: rgb(81, 81, 81)
+}
+
 .hide {
     display: none;
 }
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    background-color: darkgray;
+    margin: 40px;;
+    padding: 40px;
+    border-radius: 45px;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+header p {
+    font-size: 20px;
+}
+
+#main {
+    background-color: darkgray;
+    margin: 40px;;
+    padding: 40px;
+    border-radius: 45px;
+}
+
+#start {
+    position: relative;
+    left: 25%;
+}
+
+button {
+    width: 50%;
+    height: 40px;
+    font-weight: bolder;
+    border-radius: 20px;
+}
+
+.correct {
+    color: greenyellow;
+}
+
+.incorrect {
+    color: red;
+}
+
+@media screen and (max-width: 768px) {
+    #choices button {
+      width: 100%;
+    }
+  }
