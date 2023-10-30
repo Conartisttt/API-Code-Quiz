@@ -12,7 +12,7 @@ My deployed application can be found [here](https://conartisttt.github.io/API-Co
 * Timer
 * Use of localStorage to store final scores
 
-The following animation demonstrates the application functionality:
+The following screenshots demonstrate the applications functionality:
 
 ![Welcome Page](./assets/images/welcome.png)
 ![Display Question](./assets/images/question.png)
